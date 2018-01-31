@@ -10,8 +10,8 @@ import numpy as np
 dataPath = '/media/zxq/zxq/COCO/resized/'
 captionPath = './captionInfo/AllCaptionsOneCaptionperImage.json'
 modelPath = './ImageEmbedding2.h5'
-trainNumber = 1000
-testNumber = 200
+trainNumber = 60000
+testNumber = 2000
 numClass = 90
 # Load caption file 
 with open(captionPath,'r') as f:

@@ -13,10 +13,10 @@ from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 from keras import backend as K
 
-imageModelPath = './ImageEmbedding.h5'
-textModelPath = './TextEmbeddingL100.h5'
-regularNNPath = './TextImageEmbedding.h5'
-tokenPath = './tokenizerV2.pickle'
+imageModelPath = '../ImageEmbedding.h5'
+textModelPath = '../TextEmbeddingL100.h5'
+regularNNPath = '../TextImageEmbedding.h5'
+tokenPath = '../tokenizerV2.pickle'
 #Parameter : list of images
 #Retur : list of vectors
 def predictImageVector(images):
@@ -75,8 +75,9 @@ def predictTextImageVectorNN(texts,images):
         for i in range(0,len(textVector)):
             temp = textVector[i]+imageVector[i]
             textImageVector.append(temp)
-    textImageVector = get_layer_output([textImageVector])[0]
-    return textImageVector.tolist()
+        textImageVector = get_layer_output([textImageVector])[0]
+        print("{} vector in total".format(len(textImageVector)))
+        return textImageVector.tolist()
 #Parameter : Json fileName or Json fileName list, when isList is setted true, the fileName is a list,
 #            the file contains the images
 #            the number of instances to load for each class
@@ -98,6 +99,8 @@ def readDataFromJson(fileName,imagePath,isList = False,loadSize=100):
         temp = cv2.imread(imagePath+data[i]['image_name'])
         images.append(temp)
         texts.append(data[i]['caption'])
+        if(i % 500 == 0):
+            print("{} images read".format(i))
     return images,texts,data
 
 #Parameter: The saved JSON file name, metadata, the vector list, the dict to transfer label to class name

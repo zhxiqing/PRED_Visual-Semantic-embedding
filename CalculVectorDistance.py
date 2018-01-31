@@ -3,10 +3,14 @@ import numpy as np
 import operator
 from scipy import spatial
 
-testPath = './VectorJson/Test/'
-trainPath = './VectorJson/Train/'
-savePath = './VectorJson/neighbors/'
+testPath = '../Vector/Test/'
+trainPath = '../Vector/Train/'
+savePath = '../Neighbors/'
 suffix = '.json'
+inputTrain = 'TextImageNN'
+inputTest = 'TextImageNN'
+output = 'NNimageTextKNN'
+
 
 def readJsonFile(fileName):
     with open(fileName) as f:
@@ -37,8 +41,8 @@ def setNeighborsInfo(nb,trainSet):
         neighbors.append(temp)
     return neighbors
 
-trainSet = readJsonFile(trainPath+'ImageVector'+suffix)
-testSet = readJsonFile(testPath+'ImageVector'+suffix)
+trainSet = readJsonFile(trainPath+inputTrain+suffix)
+testSet = readJsonFile(testPath+inputTest+suffix)
 
 beSaved = []
 
@@ -62,5 +66,5 @@ for i in range(0,len(testSet)):
     beSaved.append(temp)
     print("{} of {}".format(i,len(testSet)))
 
-with open(savePath+'ImageKNN'+suffix,'w') as f:
+with open(savePath+output+suffix,'w') as f:
     json.dump(beSaved,f)
