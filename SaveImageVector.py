@@ -12,20 +12,20 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 
-preffix = './valCaptions/'
+preffix = '../captionInfo/'
 suffix = '.json'
 classes = ['airplane','apple','banana',
             'backpack','stop sign','bed',
             'cup','bus','horse']
-savePreffix = './VectorJson/Test/'
+savePreffix = '../ImageModel5/Train/'
 labelToClass = {}
 data = []
 imageName = []
 images = []
 captions = []
 labels = []
-modelPath = './ImageEmbedding.h5'
-imagePath = '/media/zxq/zxq/COCO/Valresized/'
+modelPath = '../ImageEmbedding5.h5'
+imagePath = '/media/zxq/zxq/COCO/resized/'
 
 for m_class in classes:
     with open(preffix+m_class+suffix) as f:

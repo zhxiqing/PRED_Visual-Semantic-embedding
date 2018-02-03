@@ -6,27 +6,29 @@ testPreffix = '../valCaptions/'
 trainPreffix = '../captionInfo/'
 suffix = '.json'
 labelToClass = {}
-trainSavedPath = '../Vector/Train/'
-testSavedPath  = '../Vector/Test/'
+trainSavedPath = '../ImageModel8/Train/'
+testSavedPath  = '../ImageModel8/Test/'
 with open('./labelToClass.json','r') as f:
     labelToClass = json.load(f)
 classes = ['airplane','apple','banana',
             'backpack','stop sign','bed',
             'cup','bus','horse']
 filename = []
-#for c in classes:
-#    filename.append(trainPreffix+c+suffix)
-#trainImages,trainTexts,trainMetadata = outil.readDataFromJson(filename,trainPath,isList=True,loadSize=2000)
-#print(len(trainTexts))
+for c in classes:
+    filename.append(trainPreffix+c+suffix)
+trainImages,trainTexts,trainMetadata = outil.readDataFromJson(filename,trainPath,isList=True,loadSize=2000)
+print(len(trainTexts))
 #trainVectors = outil.predictTextImageVector(trainTexts,trainImages)
-#print("Vector calculated")
-#outil.saveToJson(trainSavedPath+'TextImage.json',trainMetadata,trainVectors,labelToClass)
+trainVectors = outil.predictImageVector(trainImages)
+print("Vector calculated")
+outil.saveToJson(trainSavedPath+'Image.json',trainMetadata,trainVectors,labelToClass)
 
-
+filename = []
 for c in classes:
     filename.append(testPreffix+c+suffix)
 testImages,testTexts,testMetadata = outil.readDataFromJson(filename,testPath,isList=True,loadSize=5000)
 print(len(testTexts))
-testVectors = outil.predictTextImageVector(testTexts,testImages)
+#testVectors = outil.predictTextImageVector(testTexts,testImages)
+testVectors = outil.predictImageVector(testImages)
 print("Vector calculated")
-outil.saveToJson(testSavedPath+'TextImage.json',testMetadata,testVectors,labelToClass)
+outil.saveToJson(testSavedPath+'Image.json',testMetadata,testVectors,labelToClass)

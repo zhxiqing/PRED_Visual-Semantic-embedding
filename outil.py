@@ -13,7 +13,7 @@ from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 from keras import backend as K
 
-imageModelPath = '../ImageEmbedding.h5'
+imageModelPath = '../ImageEmbedding8.h5'
 textModelPath = '../TextEmbeddingL100.h5'
 regularNNPath = '../TextImageEmbedding.h5'
 tokenPath = '../tokenizerV2.pickle'
