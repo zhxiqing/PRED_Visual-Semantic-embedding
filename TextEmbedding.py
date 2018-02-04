@@ -4,7 +4,6 @@ import keras.preprocessing.text
 import numpy as np
 import random
 import pickle
-from keras.datasets import imdb
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
@@ -14,10 +13,10 @@ from keras.utils import to_categorical
 from keras.callbacks import TensorBoard
 from keras.callbacks import ModelCheckpoint
 import tensorflow as tf
-path = './captionInfo/AllCaptionsOneCaptionperImage.json'
-runName = 'TextEmbeddingL100_2/'
-logdir = './logs/{}'.format(runName)
-TextLabelPath = 'metadata.tsv'
+path = '../captionInfo/AllCaptionsOneCaptionperImage.json'
+#runName = 'TextEmbeddingL100_2/'
+#logdir = './logs/{}'.format(runName)
+#TextLabelPath = 'metadata.tsv'
 # Load caption file 
 with open(path,'r') as f:
     data = json.load(f)
@@ -53,20 +52,20 @@ label = list(label)
 #    pickle.dump(Tokenizer,handle,protocol=pickle.HIGHEST_PROTOCOL)
 
 #Load tokenizer from file
-with open('./tokenizerV2.pickle','rb') as handle:
+with open('../tokenizerV2.pickle','rb') as handle:
     Tokenizer=pickle.load(handle)
 
 #Split data to two part, train and test 
-spliteIndex = int(len(text)*0.1)
+spliteIndex = int(len(text)*0.8)
 train_text = text[:spliteIndex]
 train_label = label[:spliteIndex]
 test_text = text[spliteIndex:spliteIndex+10000]
 test_label = label[spliteIndex:spliteIndex+10000]
 #Save the metadata file
-with open(logdir+TextLabelPath,'w') as f:
-    f.write("Description\tLabel\n")
-    for i in range(0,len(train_label)):
-        f.write(train_text[i]+'\t'+str(train_label[i])+'\n')
+#with open(logdir+TextLabelPath,'w') as f:
+#    f.write("Description\tLabel\n")
+#    for i in range(0,len(train_label)):
+#        f.write(train_text[i]+'\t'+str(train_label[i])+'\n')
 print(train_text[0])
 #Transfer text to index sequences
 train_text = Tokenizer.texts_to_sequences(train_text)
@@ -97,25 +96,25 @@ print(train_text[0])
 embedding_vecor_length = 32
 model = Sequential()
 model.add(Embedding(5001, embedding_vecor_length, input_length=max_caption_length, mask_zero=True,name = 'embedding'))
-model.add(LSTM(100,name = 'LSTM'))
+model.add(LSTM(200,name = 'LSTM'))
 model.add(Dense(90, activation='softmax',name = 'Dense'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
 #Tensorboard
-embeddingMetadata = {'LSTM':'metadata.tsv'}
-tensorBoard = TensorBoard(log_dir=logdir,
-                            histogram_freq=1,
-                            write_graph=True,
-                            write_images=False,
-                            embeddings_freq=1,
-                            embeddings_layer_names=['embedding','LSTM','Dense'],
-                            embeddings_metadata=embeddingMetadata)
+#embeddingMetadata = {'LSTM':'metadata.tsv'}
+#tensorBoard = TensorBoard(log_dir=logdir,
+#                            histogram_freq=1,
+#                            write_graph=True,
+#                            write_images=False,
+#                            embeddings_freq=1,
+#                            embeddings_layer_names=['embedding','LSTM','Dense'],
+#                            embeddings_metadata=embeddingMetadata)
 
 
 #Train the model 
-model.fit(train_text, train_label, validation_data=(test_text, test_label), epochs=3, batch_size=64,callbacks=[tensorBoard])
+model.fit(train_text, train_label, validation_data=(test_text, test_label), epochs=3, batch_size=64)
 # Final evaluation of the model
 scores = model.evaluate(test_text, test_label, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
 print('Save model:...')
-model.save('./logs/100L.h5')
+model.save('../TextEmbedding200L.h5')

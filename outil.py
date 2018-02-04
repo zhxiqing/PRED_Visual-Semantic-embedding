@@ -13,8 +13,8 @@ from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 from keras import backend as K
 
-imageModelPath = '../ImageEmbedding8.h5'
-textModelPath = '../TextEmbeddingL100.h5'
+imageModelPath = '../4conv128n.h5'
+textModelPath = '../TextEmbeddingL200.h5'
 regularNNPath = '../TextImageEmbedding.h5'
 tokenPath = '../tokenizerV2.pickle'
 #Parameter : list of images
@@ -116,3 +116,54 @@ def saveToJson(fileName,metadata,vectors,labelToClass):
         beSaved.append(temp)
     with open(fileName,'w') as f:
         json.dump(beSaved,f)
+
+    
+def readEvaluationImageFromJson(fileName,imagePath,isList = False,loadSize=100):
+    images = []
+    labels = []
+    data = []
+    if(isList):
+        for path in fileName:
+            with open(path) as f:
+                temp = json.load(f)
+                data += temp[0:loadSize]
+                f.close()
+    else:
+        with open(fileName) as f:
+            data = json.load(f)[0:loadSize]
+    for i in range(0,len(data)):
+        temp = cv2.imread(imagePath+data[i]['image_name'])
+        if(temp is not None):
+            images.append(temp)
+            labels.append(data[i]['label'])
+            if(i % 500 == 0):
+                print("{} images read".format(i))
+        else:
+            print("Can not find {}".format(imagePath+data[i]['image_name']))
+    return images,labels
+
+def readEvaluationTextFromJson(fileName,isList = False,loadSize=100):
+    with open(tokenPath,'rb') as handle:
+        Tokenizer=pickle.load(handle)
+    max_caption_length=400
+    labels = []
+    captions = []
+    data = []
+    if(isList):
+        for path in fileName:
+            with open(path) as f:
+                temp = json.load(f)
+                data += temp[0:loadSize]
+                f.close()
+    else:
+        with open(fileName) as f:
+            data = json.load(f)[0:loadSize]
+    for i in range(0,len(data)):
+        labels.append(data[i]['label'])
+        captions.append(data[i]['caption'])
+    captions = Tokenizer.texts_to_sequences(captions)
+    captions = np.asarray(captions)
+    captions = sequence.pad_sequences(captions, maxlen=max_caption_length)
+    labels = np.asarray(labels)
+    labels = to_categorical(labels)
+    return captions,labels

@@ -3,13 +3,13 @@ import numpy as np
 import operator
 from scipy import spatial
 
-testPath = '../Vector/Test/'
-trainPath = '../Vector/Train/'
-savePath = '../Neighbors/'
+testPath = '../128N200LSTM/Test/'
+trainPath = '../128N200LSTM/Train/'
+savePath = '../128N200LSTM/Neighbors/'
 suffix = '.json'
-inputTrain = 'TextImageNN'
-inputTest = 'TextImageNN'
-output = 'NNimageTextKNN'
+inputTrain = 'ImageVec'
+inputTest = 'ImageVec'
+output = 'ImageVec'
 
 
 def readJsonFile(fileName):
